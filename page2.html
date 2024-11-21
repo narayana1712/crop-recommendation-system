@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        img{
+            width:120px;
+            height:80px;
+            padding: 10px;
+        }
+        .soil-images{
+            width:850px;
+            height:400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        .soils{
+            
+            display:flex;
+            justify-content:space-between;
+        }
+        .soil-img-bg{
+            background-color: white;
+            color:black;
+            border:1px solid black;
+            width:150px;
+            height:150px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        .soil-img-bg:hover{
+            cursor:pointer;
+            background-color: rgb(209, 248, 196);
+        }
+        .title{
+            font-weight: bold;
+            font-size:30px;
+        }
+        .container-2{
+            border:1px solid black;
+            width:400px;
+        }
+        .container{
+            display:flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+        }
+        .pie{
+            width:360px;    
+        }
+        #ph{
+            margin-left: 20px;
+        }
+        .container-3{
+            width:1500px;
+            height: 100px;
+            align-content: center;
+            border: 1px solid black;
+        }
+        a{
+            font-size: 30px;
+            border:2px solid dodgerblue;
+            background-color: none;
+            color:dodgerblue;
+            text-decoration: none;
+            padding:5px 30px;
+            padding-bottom: 10px;
+            margin-left: 100px;
+            border-radius: 10px;
+        }
+        label{
+            margin-left: 20px;
+        }
+        a:hover{
+            background-color: dodgerblue;
+            color:white;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="container-1">
+            <p class="title">Select your soil type</p>
+            <div class="soil-images">
+                <div class="soil-div-1 soils">
+                    <div class="soil-img-bg" id="1" ><img src ="/static/images/alluvial.jpg"><p>Alluvial soil</p></div>
+                    <div class="soil-img-bg" id="2"><img src ="/static/images/red.jpg"><p>Red soil</p></div>
+                    <div class="soil-img-bg" id="3"><img src ="/static/images/black.jpg"><p>Black (regur) soil</p></div>
+                    <div class="soil-img-bg" id="4"><img src ="/static/images/desert.jpg"><p>Arid/desert soil</p></div>
+                    <div class="soil-img-bg" id="5"><img src ="/static/images/laterite.jpg"><p>Laterite soil</p></div>
+                </div>
+                <div class="soil-div-2 soils">
+                    <div class="soil-img-bg" id="6"><img src ="/static/images/saline.jpg"><p>Saline soil</p></div>
+                    <div class="soil-img-bg" id="7"><img src ="/static/images/forest.jpg"><p>Forest soil</p></div>
+                    <div class="soil-img-bg" id="8"><img src ="/static/images/marshy.jpg"><p>Peaty/marshy soil</p></div>
+                    <div class="soil-img-bg" id="9"><img src ="/static/images/mountain.jpg"><p>Sub-mountain soil</p></div>
+                    <div class="soil-img-bg" id="10"><img src ="/static/images/snowfield.jpg"><p>Snowfield soil</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="container-2">
+            <h2>Pie chart</h2>
+            <div class="pie">
+                <canvas id="pie-chart"></canvas>
+            </div>
+            <p id="ph"></p>
+            <p id="crops"></p>
+        </div>
+        <div class="container-3">
+            <form action="/values" method="POST">
+                <label for="nitrogen">Nitrogen</label>
+                <input type="number" id="nitrogen" name="nitrogen" step="0.01" required>
+                <label for="phosphorous">Phosphorous</label>
+                <input type="number" id="phosphorous" name="phosphorous" step="0.01" required>
+                <label for="potassium">Potassium</label>
+                <input type="number" id="potassium" name="potassium" step="0.01" required>
+                <label for="ph1">pH</label>
+                <input type="number" id="ph1" step="0.01" name="ph1" required>
+                <button type="submit">Next</button>
+            </form>
+            
+        </div>
+    </div>
+    <script src = "https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        
+        const soilData = {
+            '1':[25, 30, 45],
+            '2': [20, 25, 55],
+            '3': [30, 20, 50],
+            '4': [10, 15, 75],
+            '5': [15, 10, 75],
+            '6': [5, 10, 85],
+            '7': [50, 30, 20],
+            '8': [35, 40, 25],
+            '9': [40, 35, 25],
+            '10': [5, 10, 85]
+        };
+        const soilPH = {
+            '1': '6.5 to 8.0',
+            '2': '6.5 to 7.5',
+            '3': '6.8 to 7.5',
+            '4': '8.5 to 10.0',
+            '5': '5.0 to 6.5',
+            '6': '8.5 to 10.0',
+            '7': '3.5 to 5.5',
+            '8': '5.5 to 6.5',
+            '9': '6.0 to 6.8',
+            '10': '6.0 to 7.0'
+        };
+        const pieChart = new Chart(document.getElementById('pie-chart'),{
+            type:'pie',
+            data:{
+                labels:['Nitrogen','Phosphorous','Potassium'],
+                datasets:[{
+                    backgroundColor : ['red','orange','blue'],
+                    data : [25,25,25]
+                }]
+            },
+            options :{
+                title : {
+                    display:true,
+                    text : "pie chart"
+                },
+                responsive : true
+            }
+        });
+        const divs = document.querySelectorAll(".soil-img-bg");
+        divs.forEach(div =>{
+            div.addEventListener('click',(event) =>{
+                divs.forEach(d => {d.style.backgroundColor = "white"; d.style.color = "black"});
+                const clickedDiv = event.currentTarget.id;
+                const divId = event.currentTarget;
+                divId.style.backgroundColor = "rgb(162, 196, 248)"
+                divId.style.color = "white"
+                pieChart.data.datasets[0].data = soilData[clickedDiv];
+                document.getElementById("ph").innerHTML=`pH level : ${soilPH[clickedDiv]}`
+                pieChart.update();
+            })
+        })
+        
+    </script>
+</body>
+</html>
